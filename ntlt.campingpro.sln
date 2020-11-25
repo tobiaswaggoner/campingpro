@@ -1,0 +1,22 @@
+﻿
+Microsoft Visual Studio Solution File, Format Version 12.00
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ntlt.campingpro.eventstore", "ntlt.campingpro.eventstore\ntlt.campingpro.eventstore.csproj", "{A044BBED-206A-49A8-9511-308E90F9A8EF}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ntlt.campingpro.eventstore.tests", "ntlt.campingpro.eventstore.tests\ntlt.campingpro.eventstore.tests.csproj", "{3E88BF95-2481-4BBC-B307-3ED80CC9CC73}"
+EndProject
+Global
+	GlobalSection(SolutionConfigurationPlatforms) = preSolution
+		Debug|Any CPU = Debug|Any CPU
+		Release|Any CPU = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(ProjectConfigurationPlatforms) = postSolution
+		{A044BBED-206A-49A8-9511-308E90F9A8EF}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{A044BBED-206A-49A8-9511-308E90F9A8EF}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{A044BBED-206A-49A8-9511-308E90F9A8EF}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{A044BBED-206A-49A8-9511-308E90F9A8EF}.Release|Any CPU.Build.0 = Release|Any CPU
+		{3E88BF95-2481-4BBC-B307-3ED80CC9CC73}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{3E88BF95-2481-4BBC-B307-3ED80CC9CC73}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{3E88BF95-2481-4BBC-B307-3ED80CC9CC73}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{3E88BF95-2481-4BBC-B307-3ED80CC9CC73}.Release|Any CPU.Build.0 = Release|Any CPU
+	EndGlobalSection
+EndGlobal
