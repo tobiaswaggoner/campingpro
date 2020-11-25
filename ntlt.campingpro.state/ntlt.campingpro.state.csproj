@@ -1,0 +1,11 @@
+<Project Sdk="Microsoft.NET.Sdk">
+
+    <PropertyGroup>
+        <TargetFramework>net5.0</TargetFramework>
+    </PropertyGroup>
+
+    <ItemGroup>
+      <ProjectReference Include="..\ntlt.campingpro.eventstore\ntlt.campingpro.eventstore.csproj" />
+    </ItemGroup>
+
+</Project>

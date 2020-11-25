@@ -7,7 +7,7 @@ namespace ntlt.campingpro.eventstore
 {
     public sealed record RebuildStateEvent() : DomainEvent(Guid.NewGuid());
 
-    public sealed class ClientEventStore
+    public sealed class ClientEventStore : IEventStore
     {
         private ClientEventStore()
         {
@@ -49,7 +49,7 @@ namespace ntlt.campingpro.eventstore
             // the changes start with our Unsynced Events --> fast forward
             // only raise the new events
             if (UnsyncedEvents.Count == 0 || changes.Count >= UnsyncedEvents.Count &&
-                Enumerable.Range(0, UnsyncedEvents.Count - 1)
+                Enumerable.Range(0, UnsyncedEvents.Count)
                     .All(i => changes[i].EventId == UnsyncedEvents[i].EventId))
             {
                 changes.Skip(UnsyncedEvents.Count)

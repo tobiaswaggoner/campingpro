@@ -81,7 +81,7 @@ namespace ntlt.campingpro.eventstore.tests
         private static void AssertThatStoresAreSynced(ClientEventStore sut, ServerEventStore server)
         {
             Assert.IsTrue(server.Events.Count == sut.Events.Count);
-            Assert.IsTrue(Enumerable.Range(0, server.Events.Count - 1).All(i => server.Events[i] == sut.Events[i]));
+            Assert.IsTrue(Enumerable.Range(0, server.Events.Count).All(i => server.Events[i] == sut.Events[i]));
         }
     }
 }

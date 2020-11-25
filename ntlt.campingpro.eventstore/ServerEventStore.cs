@@ -5,7 +5,7 @@ using System.Reactive.Linq;
 
 namespace ntlt.campingpro.eventstore
 {
-    public sealed class ServerEventStore
+    public sealed class ServerEventStore: IEventStore
     {
         private ServerEventStore()
         {
