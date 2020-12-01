@@ -26,6 +26,18 @@ namespace ntlt.campingpro.state.tests.CustomerSystem
         }
 
         [Test]
+        public void Assert_that_customers_are_added_and_deleted()
+        {
+            var store = ClientEventStore.Empty;
+            var sut = new CustomerState(store);
+
+            sut.Execute(new AddCustomerCommand(Guid.Empty, "TestCustomer"));
+            sut.Execute(new DeleteCustomerCommand(Guid.Empty));
+
+            Assert.AreEqual(0, sut.Customers.Count);
+        }        
+        
+        [Test]
         public void Assert_events_are_synced()
         {
             var clientEventStore1 = ClientEventStore.Empty;

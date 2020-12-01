@@ -1,0 +1,62 @@
+﻿@using ntlt.campingpro.state.CustomerSystem
+@using ntlt.campingpro.state.Extensions
+@page "/customereditbasedata/{Id:guid}"
+@inject CustomerState State
+@inject NavigationManager NavigationManager
+@inject ViewState ViewState;
+
+<div style="position: sticky; top: 0; background: white; margin-bottom: 3px;">
+    <button class="btn btn-link float-left" @onclick='Save'>Save</button>
+    <button class="btn btn-link float-right" @onclick='Cancel'>Cancel</button>
+</div>
+<div>
+    <input id="name" style="margin-bottom: 1px;" class="form-control" @bind="Name" @bind:event="oninput" title="Name" placeholder="Name">
+    <input id="street" style="margin-bottom: 1px;" class="form-control" @bind="Street" @bind:event="oninput" title="Street" placeholder="Street">
+    <input id="city" style="margin-bottom: 1px;" class="form-control" @bind="City" @bind:event="oninput" title="City" placeholder="City">
+</div>
+@code {
+    protected override void OnInitialized()
+    {
+        base.OnInitialized();
+        if (Id != Guid.Empty)
+        {
+            var customer = State.Customers.Find(c => c.Id == Id);
+            Name = customer?.Name;
+            Street = "Hauptstrasse 1";
+            City = "9859 Fambach";
+        }
+        else
+        {
+            Name = "";
+            Street = "";
+            City = "";
+        }
+        ViewState.Headline = $"{Action} {Title}";
+    }
+
+    private string Action => (Id == Guid.Empty ? "Add" : "Edit");
+    private string Title => (Name=="" ? (Id == Guid.Empty ? "<new customer>" : "<insert name>" ) : Name);
+    public string Name { get; private set; }
+    public string Street { get; private set; }
+    public string City { get; private set; }
+    
+    [Parameter]
+    public Guid Id { get; set; }
+    private void Cancel()
+    {
+        NavigationManager.NavigateTo(Id == Guid.Empty ? $"/customerlist" : $"/customerdetails/{Id.ToString()}");
+    }
+
+    private void Save()
+    {
+        var customerId = Id == Guid.Empty ? Guid.NewGuid() : Id;
+        
+        if(Id == Guid.Empty) 
+            State.Execute(new AddCustomerCommand(customerId, Name)); 
+        else 
+            State.Execute(new ModifyCustomerCommand(customerId, Option<string>.Some(Name))); 
+        
+        NavigationManager.NavigateTo($"/customerdetails/{customerId.ToString()}");
+    }
+    
+}

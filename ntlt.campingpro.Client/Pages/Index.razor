@@ -1,0 +1,15 @@
+﻿@page "/"
+@inject ViewState ViewState
+@inject NavigationManager NavigationManager
+
+<button @onclick='() => NavigationManager.NavigateTo("customerlist")' class="btn btn-primary">Customers</button>
+
+@code{
+
+    protected override void OnInitialized()
+    {
+        base.OnInitialized();
+        ViewState.Headline = "Camping Pro (tm)";
+    }
+
+}

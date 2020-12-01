@@ -11,6 +11,7 @@ namespace ntlt.campingpro.state.CustomerSystem
     public sealed record CustomerAddedEvent(Guid Id, string Name) : DomainEvent(Guid.NewGuid());
 
     public sealed record CustomerModifiedEvent(Guid Id, Option<string> NewName) : DomainEvent(Guid.NewGuid());
+    public sealed record CustomerDeletedEvent(Guid Id) : DomainEvent(Guid.NewGuid());
 
     public sealed class CustomerState
     {
@@ -30,6 +31,7 @@ namespace ntlt.campingpro.state.CustomerSystem
             {
                 CustomerAddedEvent castedEvt => ApplyEventToState(castedEvt),
                 CustomerModifiedEvent castedEvt => ApplyEventToState(castedEvt),
+                CustomerDeletedEvent castedEvt => ApplyEventToState(castedEvt),
                 RebuildStateEvent castedEvt => ApplyEventToState(castedEvt),
                 _ => false,
             };
@@ -48,6 +50,13 @@ namespace ntlt.campingpro.state.CustomerSystem
 
             Customers = Customers.Replace(customer,
                 customer with { Name = evt.NewName.ReplaceIfSome(customer.Name) });
+            return true;
+        }
+
+        private bool ApplyEventToState(CustomerDeletedEvent evt)
+        {
+            Customers = Customers.Where(c => evt.Id != c.Id)
+                .ToImmutableList();
             return true;
         }
 

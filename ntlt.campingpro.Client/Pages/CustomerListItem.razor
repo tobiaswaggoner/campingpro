@@ -1,0 +1,10 @@
+﻿@using ntlt.campingpro.state.CustomerSystem
+
+<div class="nameLabel">@Customer?.Name</div>
+<div class="addressLabel">Hauptstrasse 11 - 98597 Fambach</div>
+
+@code {
+    [Parameter]
+    public Customer Customer { get; set; }
+}
+

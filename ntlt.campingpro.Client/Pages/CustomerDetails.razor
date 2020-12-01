@@ -1,0 +1,66 @@
+﻿@using ntlt.campingpro.state.CustomerSystem
+@page "/customerdetails/{Id:guid}"
+@inject CustomerState State
+@inject NavigationManager NavigationManager
+@inject ViewState ViewState
+<div style="position: sticky; top: 0; background: white; margin-bottom: 3px;" xmlns="http://www.w3.org/1999/html">
+    <div hidden="@(_deletionConfirmationVisible)">
+        <button class="btn btn-link float-right" @onclick='() => NavigationManager.NavigateTo("/customerlist")'>Back</button>
+        <button class="btn btn-link text-danger float-right" @onclick="StartDelete">Delete</button>
+    </div>
+    <div hidden="@(!_deletionConfirmationVisible)">
+        
+        <div class="alert alert-danger text-right align-middle">
+            Are you sure that you want to delete<br><strong>@Customer.Name?</strong> <br>
+            <button class="btn btn-link text-black-50" @onclick="CancelDelete">Cancel</button>
+            <button class="btn btn-link text-danger" @onclick="Delete">Yes</button>
+        </div>
+    </div>
+</div>
+
+<button class="btn btn-block text-left" style="padding: 0;" @onclick='() => NavigationManager.NavigateTo($"customereditbasedata/{Id.ToString()}")'>
+    <hr/>
+    <div>
+        <strong>@Customer.Name</strong>
+    </div>
+    <div>Hauptstrasse 11</div>
+    <div>98597 Fambach</div>
+</button>
+<div>
+    <hr/>
+    <div>
+        <strong>27 Bookings</strong>
+    </div>
+</div>
+
+@code {
+
+    protected override void OnInitialized()
+    {
+        base.OnInitialized();
+        Customer = State.Customers.Find(c => c.Id == Id);
+        ViewState.Headline = $"{Customer?.Name}";
+    }
+
+    [Parameter]
+    public Guid Id { get; set; }
+
+    Customer Customer { get; set; }
+
+    private void Delete()
+    {
+        State.Execute(new DeleteCustomerCommand(Id));
+        NavigationManager.NavigateTo("/customerlist");
+    }
+
+    private bool _deletionConfirmationVisible = false;
+    private void StartDelete()
+    {
+        _deletionConfirmationVisible = true;
+    }
+    private void CancelDelete()
+    {
+        _deletionConfirmationVisible = false;
+    }
+
+}

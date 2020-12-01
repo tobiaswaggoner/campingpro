@@ -1,0 +1,61 @@
+﻿@page "/customerlist"
+@using ntlt.campingpro.state.CustomerSystem
+@inject CustomerState State
+@inject NavigationManager NavigationManager
+@inject ViewState ViewState
+
+<div style="position: sticky; top: 0; background: white; margin-bottom: 3px;">
+    <div class="row">
+        <div class="col">
+            <input class="form-control" type="text" @bind="Filter" @bind:event="oninput" title="Search" placeholder="Search"/>
+        </div>
+        <div class="col-3">
+            <button class="btn btn-link" @onclick='() => NavigationManager.NavigateTo($"/customereditbasedata/{Guid.Empty.ToString()}") '>New</button>
+        </div>
+    </div>
+    <div class="countLabel">Total: @State.Customers.Count() Found: @FilteredCustomers.Count(), Displayed: @(Math.Min(DisplayedCustomers.Count(), _maxDisplay))</div>
+    <hr />
+</div>
+@foreach (var c in DisplayedCustomers)
+{
+    <button class="btn btn-block text-left" style="padding: 0;" @onclick='() => NavigationManager.NavigateTo($"customerDetails/{c.Id.ToString()}")'>
+        <CustomerListItem Customer=@c/>
+    </button>
+}
+<button class="btn btn-link" hidden="@(!MoreAvailable)" @onclick="DisplayMore">...</button>
+
+@code {
+
+    private int _maxDisplay = 20;
+    private string _filter = "";
+
+    private IEnumerable<Customer> FilteredCustomers => State.Customers
+        .Where(c => c.Name.ToLowerInvariant().Contains(Filter.ToLowerInvariant()))
+        .OrderBy(c => c.Name);
+
+    private IEnumerable<Customer> DisplayedCustomers => FilteredCustomers
+        .Take(_maxDisplay);
+
+    private bool MoreAvailable => FilteredCustomers.Count() > _maxDisplay;
+
+    private string Filter
+    {
+        get { return _filter; }
+        set
+        {
+            _maxDisplay = Math.Max(20, DisplayedCustomers.Count());
+            _filter = value;
+        }
+    }
+
+    private void DisplayMore()
+    {
+        _maxDisplay += 10;
+    }
+
+    protected override void OnInitialized()
+    {
+        base.OnInitialized();
+        ViewState.Headline = "Customers";
+    }
+}
