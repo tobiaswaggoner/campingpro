@@ -109,14 +109,15 @@ namespace ntlt.campingpro.Client
                 {
                     viewState.Connected = true;
                     Console.WriteLine($"SignalRConnection Reconnected {s}");
+                    serverChangesAvailable.OnNext(0);
                 });
             };
 
-            TryToStartSynchronizationHub(synchronizationHub, viewState);
+            TryToStartSynchronizationHub(synchronizationHub, viewState, serverChangesAvailable);
             await builder.Build().RunAsync();
         }
 
-        private static void TryToStartSynchronizationHub(HubConnection synchronizationHub, ViewState viewState)
+        private static void TryToStartSynchronizationHub(HubConnection synchronizationHub, ViewState viewState, Subject<long> serverChangesAvailable)
         {
             Task.Run(async () =>
             {
@@ -128,6 +129,7 @@ namespace ntlt.campingpro.Client
                         Console.WriteLine($"Connected to server.");
                         if (!viewState.Connected)
                             viewState.Connected = true;
+                        serverChangesAvailable.OnNext(0);
                         return;
                     }
                     catch (Exception e)
