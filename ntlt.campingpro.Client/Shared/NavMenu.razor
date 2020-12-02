@@ -3,7 +3,18 @@
 @inject ViewState ViewState
 
 <div class="top-row pl-4 navbar navbar-dark">
-    <a class="navbar-brand" href="">@ViewState.Headline</a>
+
+    <a class="navbar-brand" href="">
+        @if (ViewState.Connected)
+        {
+            <span class="oi oi-circle-check text-success"></span>
+        }
+        else
+        {
+            <span class="oi oi-flash text-danger"></span>
+        }
+        @ViewState.Headline?.Substring(0, Math.Min(ViewState.Headline.Length, 20))
+    </a>
     <button class="navbar-toggler" @onclick="ToggleNavMenu">
         <span class="navbar-toggler-icon"></span>
     </button>
@@ -21,6 +32,11 @@
                 <span class="oi oi-list-rich" aria-hidden="true"></span> Customers
             </NavLink>
         </li>
+        <li class="nav-item px-3">
+            <NavLink class="nav-link" href="eventstoreviewer">
+                <span class="oi oi-list-rich" aria-hidden="true"></span> Events
+            </NavLink>
+        </li>
     </ul>
 </div>
 
@@ -28,6 +44,7 @@
     private bool collapseNavMenu = true;
 
     private string NavMenuCssClass => collapseNavMenu ? "collapse" : null;
+
     protected override void OnInitialized()
     {
         base.OnInitialized();
@@ -38,4 +55,5 @@
     {
         collapseNavMenu = !collapseNavMenu;
     }
+
 }

@@ -15,6 +15,8 @@ namespace ntlt.campingpro.state.CustomerSystem
 
     public sealed class CustomerState
     {
+        public event EventHandler OnStateChanged;
+        
         public CustomerState(IEventStore store)
         {
             Store = store;
@@ -35,6 +37,8 @@ namespace ntlt.campingpro.state.CustomerSystem
                 RebuildStateEvent castedEvt => ApplyEventToState(castedEvt),
                 _ => false,
             };
+            
+            RaiseOnStateChanged();
         }
 
         private bool ApplyEventToState(CustomerAddedEvent evt)
@@ -69,6 +73,11 @@ namespace ntlt.campingpro.state.CustomerSystem
         private void Reset()
         {
             Customers = ImmutableList<Customer>.Empty;
+        }
+
+        private void RaiseOnStateChanged()
+        {
+            OnStateChanged?.Invoke(this, EventArgs.Empty);
         }
     }
 }

@@ -1,5 +1,7 @@
 ﻿using System;
+using System.Collections.Immutable;
 using System.Linq;
+using Newtonsoft.Json;
 using ntlt.campingpro.eventstore;
 using ntlt.campingpro.state.CustomerSystem;
 using ntlt.campingpro.state.Extensions;
@@ -35,7 +37,7 @@ namespace ntlt.campingpro.state.tests.CustomerSystem
             sut.Execute(new DeleteCustomerCommand(Guid.Empty));
 
             Assert.AreEqual(0, sut.Customers.Count);
-        }        
+        }
         
         [Test]
         public void Assert_events_are_synced()
@@ -54,18 +56,19 @@ namespace ntlt.campingpro.state.tests.CustomerSystem
 
             serverState.Execute(new AddCustomerCommand(Guid.NewGuid(), "TestCustomer Number 3"));
 
-            
             // Sync
-            var changes1 = clientEventStore1.UnsyncedEvents;
+            var json1 = JsonConvert.SerializeObject(clientEventStore1.UnsyncedEvents, new JsonSerializerSettings { TypeNameHandling = TypeNameHandling.All });
+            var changes1 = JsonConvert.DeserializeObject<ImmutableList<DomainEvent>>(json1, new JsonSerializerSettings { TypeNameHandling = TypeNameHandling.All });
             changes1.ForEach(serverEventStore.StoreEvent);
 
-            var changes2 = clientEventStore2.UnsyncedEvents;
+            var json2 = JsonConvert.SerializeObject(clientEventStore2.UnsyncedEvents, new JsonSerializerSettings { TypeNameHandling = TypeNameHandling.All });
+            var changes2 = JsonConvert.DeserializeObject<ImmutableList<DomainEvent>>(json2, new JsonSerializerSettings { TypeNameHandling = TypeNameHandling.All });
             changes2.ForEach(serverEventStore.StoreEvent);
 
             clientEventStore1.ApplyChangesFromServer(
-                serverEventStore.GetChangesSince(clientEventStore1.Events.FirstOrDefault()?.EventId));
+                serverEventStore.GetChangesSince(clientEventStore1.Events.LastOrDefault()?.EventId));
             clientEventStore2.ApplyChangesFromServer(
-                serverEventStore.GetChangesSince(clientEventStore2.Events.FirstOrDefault()?.EventId));
+                serverEventStore.GetChangesSince(clientEventStore2.Events.LastOrDefault()?.EventId));
 
             Assert.IsTrue(clientState1.Customers.Count == clientState2.Customers.Count &&
                           clientState1.Customers.Count == serverState.Customers.Count);

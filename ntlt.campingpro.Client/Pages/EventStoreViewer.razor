@@ -1,0 +1,49 @@
+﻿@page "/eventstoreviewer"
+@using ntlt.campingpro.state.CustomerSystem
+@using Newtonsoft.Json
+@using ntlt.campingpro.eventstore
+@inject CustomerState State;
+@inject ViewState ViewState
+
+
+<div style="font-size: 10px; font-family: 'Courier New',sans-serif">
+    <b>NOT SYNCHRONIZED</b>
+</div>
+@foreach (var evt in ClientEventStore.UnsyncedEvents.Reverse())
+{
+    <div style="font-size: 10px; font-family: 'Courier New',sans-serif">
+        <b>@evt.EventName</b>
+    </div>
+    <div style="font-size: 9px; font-family: 'Courier New',sans-serif">
+        @JsonConvert.SerializeObject(evt, Formatting.Indented);
+    </div>
+    <hr>
+}
+
+<hr>
+<div style="font-size: 10px; font-family: 'Courier New',sans-serif">
+    <b>SYNCHRONIZED</b>
+</div>
+@foreach (var evt in ClientEventStore.Events.Reverse())
+{
+    <div style="font-size: 10px; font-family: 'Courier New',sans-serif">
+        <b>@evt.EventName</b>
+    </div>
+    <div style="font-size: 9px; font-family: 'Courier New',sans-serif">
+        @JsonConvert.SerializeObject(evt, Formatting.Indented);
+    </div>
+    <hr>
+}
+
+@code {
+
+    private ClientEventStore ClientEventStore => (ClientEventStore) State?.Store;
+
+    protected override async void OnInitialized()
+    {
+        await base.OnInitializedAsync();
+        ViewState.Headline = "Event Log";
+        State.Store.DomainEvents.Subscribe(ev => StateHasChanged());
+    }
+
+}

@@ -11,8 +11,8 @@
             IsSome = true;
         }
 
-        public bool IsSome { get; }
-        public T Value { get; }
+        public bool IsSome { get; set; }
+        public T Value { get; set; }
 
         public T ReplaceIfSome(T defaultValue) => IsSome ? Value : defaultValue;
     }

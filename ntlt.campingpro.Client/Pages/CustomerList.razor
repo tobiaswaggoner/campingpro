@@ -52,10 +52,11 @@
     {
         _maxDisplay += 10;
     }
-
-    protected override void OnInitialized()
+    protected override async void OnInitialized()
     {
-        base.OnInitialized();
+        await base.OnInitializedAsync();
         ViewState.Headline = "Customers";
+        State.OnStateChanged += (_, _) => StateHasChanged();
     }
+
 }

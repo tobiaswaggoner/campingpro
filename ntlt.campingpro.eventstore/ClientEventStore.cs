@@ -45,28 +45,34 @@ namespace ntlt.campingpro.eventstore
 
         public void ApplyChangesFromServer(ImmutableList<DomainEvent> changes)
         {
+            // Skip all that have already arrived earlier.
+            var newChanges = changes
+                .Where(change => Events.All(evt => evt.EventId != change.EventId))
+                .ToImmutableList();
+
             // there are no Unsynced changes or
             // the changes start with our Unsynced Events --> fast forward
             // only raise the new events
-            if (UnsyncedEvents.Count == 0 || changes.Count >= UnsyncedEvents.Count &&
+            if (UnsyncedEvents.Count == 0 || newChanges.Count >= UnsyncedEvents.Count &&
                 Enumerable.Range(0, UnsyncedEvents.Count)
-                    .All(i => changes[i].EventId == UnsyncedEvents[i].EventId))
+                    .All(i => newChanges[i].EventId == UnsyncedEvents[i].EventId))
             {
-                changes.Skip(UnsyncedEvents.Count)
+                newChanges.Skip(UnsyncedEvents.Count)
                     .ToImmutableList()
                     .ForEach(RaiseEvent);
 
                 UnsyncedEvents = ImmutableList<DomainEvent>.Empty;
-                Events = Events.AddRange(changes);
+                Events = Events.AddRange(newChanges);
                 return;
             }
 
             // We have a potential conflict. Our changes must be re-applied after
             // the server changes. Rebuild State from scratch.
 
-            Events = changes;
+            Events = Events.TakeWhile(evt => evt.EventId != newChanges.First().EventId).ToImmutableList()
+                .AddRange(newChanges);
             UnsyncedEvents = UnsyncedEvents
-                .Where(ue => changes.All(change => change.EventId != ue.EventId))
+                .Where(ue => newChanges.All(change => change.EventId != ue.EventId))
                 .ToImmutableList();
 
             // Reset the state(s) to empty

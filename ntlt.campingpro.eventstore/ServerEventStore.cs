@@ -35,6 +35,8 @@ namespace ntlt.campingpro.eventstore
 
         public void StoreEvent(DomainEvent newEvent)
         {
+            if (Events.Any(ev => ev.EventId == newEvent.EventId)) 
+                return;
             Events = Events.Add(newEvent);
             RaiseEvent(newEvent);
         }

@@ -1,6 +1,4 @@
 ﻿<wpf:ResourceDictionary xml:space="preserve" xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml" xmlns:s="clr-namespace:System;assembly=mscorlib" xmlns:ss="urn:shemas-jetbrains-com:settings-storage-xaml" xmlns:wpf="http://schemas.microsoft.com/winfx/2006/xaml/presentation">
 	<s:String x:Key="/Default/Environment/UnitTesting/UnitTestSessionStore/Sessions/=ed47e349_002Da2ba_002D4884_002D9b11_002De4a212660607/@EntryIndexedValue">&lt;SessionState ContinuousTestingMode="0" IsActive="True" Name="Assert_that_customers_are_added_and_deleted" xmlns="urn:schemas-jetbrains-com:jetbrains-ut-session"&gt;&#xD;
-  &lt;TestAncestor&gt;&#xD;
-    &lt;TestId&gt;NUnit3x::37B80934-F483-4E50-A2B2-DBEC5FBC6E91::net5.0::ntlt.campingpro.state.tests.CustomerSystem.Given a CustomerState.Assert_that_customers_are_added_and_deleted&lt;/TestId&gt;&#xD;
-  &lt;/TestAncestor&gt;&#xD;
+  &lt;Solution /&gt;&#xD;
 &lt;/SessionState&gt;</s:String></wpf:ResourceDictionary>
